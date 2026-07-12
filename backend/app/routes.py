@@ -56,14 +56,13 @@ async def create_maintenance(
     )
 
 
-@router.post("/maintenance/{maintenance_id}/complete", status_code=501)
-async def complete_maintenance(
-    maintenance_id: int,
+@router.post("/maintenance", status_code=201)
+async def create_maintenance(
+    payload: MaintenanceCreateRequest,
+    db: Session = Depends(get_db),
 ):
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Maintenance service is being migrated.",
-    )
+    service = MaintenanceService(db)
+    return service.create_maintenance_log(payload)
 
 
 @router.post("/fuel-logs", status_code=501)

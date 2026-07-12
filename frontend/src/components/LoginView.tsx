@@ -12,7 +12,7 @@ interface LoginViewProps {
 }
 
 export default function LoginView({ onLogin }: LoginViewProps) {
-  const [email, setEmail] = useState('Raven.k@transitops.in');
+  const [email, setEmail] = useState('Shraddha@gmail.com');
   const [password, setPassword] = useState('••••••••');
   const [selectedRole, setSelectedRole] = useState<UserRole>('Fleet Manager');
   const [rememberMe, setRememberMe] = useState(true);
@@ -34,7 +34,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
     }
 
     // Standard credential checking simulation
-    if (email.toLowerCase() !== 'raven.k@transitops.in' || password !== '••••••••') {
+    if (email.toLowerCase() !== 'shraddha@gmail.com' || password !== '••••••••') {
       const nextFail = failedAttempts + 1;
       setFailedAttempts(nextFail);
       
@@ -145,7 +145,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-[#2A2A2A] border border-gray-700 rounded px-9 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#714B67] focus:border-[#714B67] text-white"
-                  placeholder="Raven.k@transitops.in"
+                  placeholder="Shraddha@gmail.com"
                   id="login-email"
                 />
               </div>
@@ -199,7 +199,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
               </label>
               <button
                 type="button"
-                onClick={() => alert('Seeded account credentials: \nEmail: Raven.k@transitops.in \nPassword: •••••••• (Use the default asterisk letters filled)')}
+                onClick={() => alert('Seeded account credentials: \nEmail: Shraddha@gmail.com \nPassword: •••••••• (Use the default asterisk letters filled)')}
                 className="hover:underline text-[#00A09D] font-medium"
               >
                 Forgot password?

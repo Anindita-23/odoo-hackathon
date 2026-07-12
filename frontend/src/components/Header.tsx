@@ -125,13 +125,13 @@ export default function Header({
         {/* User Profile */}
         <div className="flex items-center gap-3 pl-2 border-l border-gray-200">
           <div className="flex flex-col items-end hidden sm:flex">
-            <span className="text-sm font-semibold text-[#2E2E2E]">Raven K.</span>
+            <span className="text-sm font-semibold text-[#2E2E2E]">Shraddha</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded border ${getRoleBadgeStyle(userRole)}`}>
               {userRole}
             </span>
           </div>
           <div className="w-8 h-8 rounded-full bg-[#714B67] text-white flex items-center justify-center font-bold text-xs shadow-sm border border-gray-100">
-            RK
+            S
           </div>
           <button
             onClick={onLogout}

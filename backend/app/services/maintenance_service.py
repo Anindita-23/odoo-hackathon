@@ -1,44 +1,68 @@
-from __future__ import annotations
-
-from typing import Any, Protocol
+from datetime import datetime
 
 from fastapi import HTTPException, status
+from sqlalchemy.orm import Session
 
-
-class MaintenanceRepositoryProtocol(Protocol):
-    def get_vehicle(self, vehicle_id: int) -> dict[str, Any] | None:
-        ...
-
-    def create_maintenance_log(self, data: dict[str, Any]) -> dict[str, Any]:
-        ...
-
-    def update_vehicle(self, vehicle_id: int, **updates: Any) -> dict[str, Any]:
-        ...
+from app.models.base import MaintenanceStatus, VehicleStatus
+from app.models.maintenance_log import MaintenanceLog
+from app.models.vehicle import Vehicle
 
 
 class MaintenanceService:
-    def __init__(self, repository: MaintenanceRepositoryProtocol) -> None:
-        self.repository = repository
+    def __init__(self, db: Session):
+        self.db = db
 
-    def create_maintenance_log(self, data: dict[str, Any]) -> dict[str, Any]:
-        vehicle = self.repository.get_vehicle(data["vehicle_id"])
+    def create_maintenance_log(self, data):
+        vehicle = (
+            self.db.query(Vehicle)
+            .filter(Vehicle.id == data.vehicle_id)
+            .first()
+        )
+
         if vehicle is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Vehicle not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Vehicle not found",
+            )
 
-        maintenance = self.repository.create_maintenance_log({**data, "status": "ACTIVE"})
-        self.repository.update_vehicle(data["vehicle_id"], status="IN_SHOP")
+        maintenance = MaintenanceLog(
+            vehicle_id=data.vehicle_id,
+            description=data.description,
+            cost=data.cost,
+            status=MaintenanceStatus.ACTIVE,
+            start_date=data.start_date,
+            end_date=data.end_date,
+            created_at=datetime.utcnow(),
+        )
+
+        self.db.add(maintenance)
+        vehicle.status = VehicleStatus.IN_SHOP
+
+        self.db.commit()
+        self.db.refresh(maintenance)
+
         return maintenance
 
-    def complete_maintenance(self, maintenance_id: int) -> dict[str, Any]:
-        maintenance = self.repository.get_maintenance_log(maintenance_id)
-        if maintenance is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Maintenance log not found")
-
-        vehicle_id = maintenance["vehicle_id"]
-        updated_maintenance = self.repository.update_maintenance_log(
-            maintenance_id,
-            status="COMPLETED",
-            end_date=maintenance.get("end_date"),
+    def complete_maintenance(self, maintenance_id: int):
+        maintenance = (
+            self.db.query(MaintenanceLog)
+            .filter(MaintenanceLog.id == maintenance_id)
+            .first()
         )
-        self.repository.update_vehicle(vehicle_id, status="AVAILABLE")
-        return updated_maintenance
+
+        if maintenance is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Maintenance log not found",
+            )
+
+        maintenance.status = MaintenanceStatus.COMPLETED
+        maintenance.end_date = datetime.now().date()
+
+        if maintenance.vehicle:
+            maintenance.vehicle.status = VehicleStatus.AVAILABLE
+
+        self.db.commit()
+        self.db.refresh(maintenance)
+
+        return maintenance
