@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-odoo-primary: #714B67;
+  --color-odoo-primary-hover: #5D3F56;
+  --color-odoo-secondary: #875A7B;
+  --color-odoo-teal: #00A09D;
+  --color-odoo-bg: #F6F7F9;
+  --color-odoo-surface: #FFFFFF;
+  --color-odoo-sidebar: #FFFFFF;
+  --color-odoo-border: #E5E7EB;
+  --color-odoo-divider: #ECECEC;
+  --color-odoo-text-primary: #2E2E2E;
+  --color-odoo-text-secondary: #6B7280;
+  --color-odoo-text-disabled: #9CA3AF;
+  
+  --font-sans: "Inter", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-odoo-bg);
+  color: var(--color-odoo-text-primary);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+}

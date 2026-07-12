@@ -1,0 +1,6 @@
+{
+  "name": "TransitOps",
+  "description": "An ERP-grade Fleet and Transit Operations module styled under the Odoo Enterprise design language.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
