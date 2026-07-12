@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 
 from app.database import engine, get_db
 from app.models import User, Role
-
+from app.routes import router
 
 app = FastAPI()
+app.include_router(router)
 
 
 @app.get("/")
